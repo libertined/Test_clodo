@@ -6,7 +6,7 @@ html, body { padding: 0; margin: 0; font-family: Tahoma, Arial, sans-serif; colo
 .clearfix:after { content: ''; display: table; clear: both; }
 
 /* СЕТКА */
-.col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 { position: relative; min-height: 1px; padding-left: 5px; padding-right: 5px; float: left; }
+.col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 { position: relative; min-height: 1px; margin-left: 5px; margin-right: 5px; float: left; }
 
 .col-xs-1 { width: 8.33333%; }
 
@@ -40,11 +40,22 @@ html, body { padding: 0; margin: 0; font-family: Tahoma, Arial, sans-serif; colo
 
 /*  ФИЛЬТРЫ  */
 .filter { float: left; width: 200px; }
-.filter__form { margin: 0; }
+.filter__form { margin: 0; width: 100%; }
 .filter__send { width: 120px; margin: 5px 0 5px; }
+.filter__item { position: relative; margin: 15px 0 10px; width: 100%; }
+.filter__item-title { margin: 0; color: #35c880; }
+.filter__item-title span { font-size: 16px; }
+.filter__item-title--left { margin-right: 10px; }
+.filter__item-title--right { margin-left: 10px; float: right; }
+.filter__text-field { width: 100%; box-sizing: border-box; color: #000; }
+.filter__text-field--small { width: 110px; }
+.filter__text-field--double { width: 65px; margin-left: 5px; }
+.filter__checkbox { margin-right: 10px; }
 
 .content { float: right; width: 750px; }
 .content--full { float: none; width: 100%; }
+
+.main-title { float: 18px; color: #000; font-weight: normal; text-decoration: underline; }
 
 /*  ТАБЛИЦА ПОЛЬЗОВАТЕЛЕЙ  */
 .users-table { border-collapse: collapse; margin-bottom: 15px; }

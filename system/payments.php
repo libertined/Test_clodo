@@ -14,10 +14,11 @@ class Payments{
         $DDL = 'DROP TABLE IF EXISTS payments;';
         $DDL2 = 'CREATE TABLE payments ('.
             'ID INT(11) NOT NULL AUTO_INCREMENT,'.
-            'DATE_AYP DATETIME,'.
+            'USER_ID INT(11) NOT NULL,'.
+            'DATE_PAY DATETIME,'.
             'AMOUNT DECIMAL (12,2),'.
             'primary key (ID)'.
-            ');';
+            ')';
 
         $DB->Query($DDL, false, $err_mess.__LINE__);
         $DB->Query($DDL2, false, $err_mess.__LINE__);

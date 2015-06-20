@@ -1,5 +1,8 @@
 <?php 
-    $configRoot = $_SERVER["DOCUMENT_ROOT"].'/system';    
+$configRoot = $_SERVER["DOCUMENT_ROOT"].'/system';
+require_once($configRoot.'/users.php');
+$users = new Users();
+$arResult["USERS"] = $users->getList();
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,6 +24,37 @@
             <div class="main-part clearfix">
                 <div class="filter col-xs-3">
                     <form class="filter__form" name="filter-form" action="/ajax/filter_result.php" method="post" id="filter_form">
+                        <div class="filter__item">
+                            <p class="filter__item-title">ФИО</p>
+                            <input class="filter__text-field" type="text" placeholder="Введите ФИО" value="" name="fio"/>
+                        </div>
+                        <div class="filter__item">
+                            <label class="filter__item-title"><input class="filter__checkbox" type="checkbox" value="1" name="phone"/>
+                                Наличие телефона</label>
+                        </div>
+                        <div class="filter__item">
+                            <p class="filter__item-title">Баланс</p>
+                            <label class="filter__item-title filter__item-title--left">
+                                <input class="filter__radio" type="radio" value="less" name="balance_marg"/>
+                                <span>&lt;</span>
+                            </label>
+                            <input class="filter__text-field filter__text-field--small" type="text" placeholder="Введите Баланс" value=""
+                                   name="balance"/>
+                            <label class="filter__item-title filter__item-title--right">
+                                <span>&gt;</span>
+                                <input class="filter__radio" type="radio" value="more" name="balance_marg"/>
+                            </label>
+                        </div>
+                        <div class="filter__item">
+                            <p class="filter__item-title">Зарегистрирован в период</p>
+                            <label class="filter__item-title"><span>С</span> <input class="filter__text-field filter__text-field--double" type="text" placeholder="Дата" value="" name="date_from"/></label>
+                            <label class="filter__item-title filter__item-title--right"><span>По</span> <input class="filter__text-field filter__text-field--double" type="text" placeholder="Дата" value="" name="date_to"/></label>
+                        </div>
+                        <div class="filter__item">
+                            <p class="filter__item-title">Средний платеж (за весь период) </p>
+                            <label class="filter__item-title"><span>От</span> <input class="filter__text-field filter__text-field--double" type="text" placeholder="Сумма" value="" name="payment_from"/></label>
+                            <label class="filter__item-title filter__item-title--right"><span>До</span> <input class="filter__text-field filter__text-field--double" type="text" placeholder="Сумма" value="" name="payment_to"/></label>
+                        </div>
                         <input class="filter__send" type="submit" value="Применить" name="filter-send">
                     </form>
                 </div>
@@ -33,16 +67,28 @@
                             <th>Телефон</th>
                             <th>Баланс</th>
                         </tr>
-                        <tr class="users-table__row" data-user="0">
-                            <td>Иванов Иван</td>
-                            <td>test@yandex.ru</td>
-                            <td><button name="send_email">Послать сообщение</button></td>
-                            <td>100,53</td>
-                        </tr>
+                        <?
+                        /*Выводим результаты*/
+                        foreach ($arResult["USERS"] as $key => $itemUser) {
+                            ?>
+                            <tr class="users-table__row" data-user="<?=$itemUser["id"]?>">
+                                <td><?=$itemUser["NAME"]?></td>
+                                <td><?=$itemUser["EMAIL"]?></td>
+                                <td><?if($itemUser["PHONE"] != ""):?>
+                                        <?=$itemUser["PHONE"]?>
+                                    <?else:?>
+                                        <button name="send_email">Послать сообщение</button>
+                                    <?endif;?>
+                                </td>
+                                <td><?=$itemUser["BALANCE"]?></td>
+                            </tr>
+                        <?
+                        }
+                        ?>
                     </table>
                 </div>
             </div>
-
         </div>
+        <script type="text/javascript" src="/js/script.js"></script>
     </body>
 </html>

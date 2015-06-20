@@ -57,11 +57,55 @@ html, body{
 
   &__form{
     margin: 0;
+    width: 100%;
   }
 
   &__send{
     width: 120px;
     margin: 5px 0 5px;
+  }
+
+  &__item{
+    position: relative;
+    margin: 15px 0 10px;
+    width:100%;
+  }
+
+  &__item-title{
+    margin: 0;
+    color: $green;
+
+    & span{
+      font-size: $text-bidder;
+    }
+
+    &--left{
+      margin-right: 10px;
+    }
+
+    &--right{
+      margin-left: 10px;
+      float: right;
+    }
+  }
+
+  &__text-field{
+    width: 100%;
+    box-sizing: border-box;
+    color: $color_def;
+
+    &--small{
+      width: 110px;
+    }
+
+    &--double{
+      width:65px;
+      margin-left: 5px;
+    }
+  }
+
+  &__checkbox{
+    margin-right: 10px;
   }
 }
 
@@ -76,7 +120,10 @@ html, body{
 }
 
 .main-title{
-
+  float: $h-size;
+  color: $color_def;
+  font-weight: normal;
+  text-decoration: underline;
 }
 
 /*  ТАБЛИЦА ПОЛЬЗОВАТЕЛЕЙ  */

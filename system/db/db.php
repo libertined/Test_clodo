@@ -13,32 +13,29 @@ class DB{
 	protected $dbHost = SQL_HOST;
 	protected $dbUser = SQL_USER;
 	protected $dbPass = SQL_PASSWORD; 
-	protected $dbCon = '';
+	protected $dbConn = '';
 	protected $error = '';
 	protected $count = 0;
 	protected $result = array();
 	
 	/* Основной метод, создаем подключение к БД*/
-	function DB(){
-		$this->dbConn = ($dbConn=='')? mysql_connect($this->dbHost.':'.$this->dbPort, $this->dbUser, $this->dbPass):$dbConn;
-	    if ( !$this->dbConn ){
-			$this->error = mysql_error($this->dbConn);
-			die();
-		}
-		if (!mysql_select_db($this->dbName, $this->dbConn)){
-			$this->error = mysql_error($this->dbConn);
-			die();
-		}
-		mysql_query('SET NAMES utf8');
+	public function __construct(){
+		$this->dbConn = mysql_connect($this->dbHost, $this->dbUser, $this->dbPass) or die(mysql_error());
+		mysql_select_db($this->dbName, $this->dbConn);
+		mysql_query("SET NAMES 'utf8'", $this->dbConn);
 	}
-	
+
+	function __destruct() {
+		mysql_close($this->dbConn);
+	}
+
 	/* Медот запроса (только селект)
 	* Вернулось -1 - Ошибка
 	* Вернулось 0 - Не найдено результатов
 	* Вернулось >0 - Количество результатов
 	*/
 	function Query($sql){
-	  $res = mysql_query($this->dbName, $sql, $this->dbConn);
+	  $res = mysql_query($sql, $this->dbConn);
 	  if ( !$res ){
 		  $this->error = mysql_error($this->dbConn);
 		  return -1;
@@ -62,7 +59,7 @@ class DB{
 	* Вернулось >0 - Количество результатов
 	*/
 	function QueryChange($sql){
-	  $res = mysql_query($this->dbName, $sql, $this->dbConn);
+	  $res = mysql_query($sql, $this->dbConn);
 	  if ( !$res ){
 		  $this->error = mysql_error($this->dbConn);
 		  return -1;
