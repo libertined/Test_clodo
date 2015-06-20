@@ -1,0 +1,102 @@
+@import 'variables.scss';
+@import 'mixins.scss';
+
+html, body{
+  padding:  0;
+  margin: 0;
+  font-family: $font;
+  color: $color_def;
+  font-size: $text-size;
+}
+.layoutCenterWrapper{
+  width: $width_def;
+  min-height: 50px;
+  margin: 0 auto;
+}
+.clearfix:after{
+  content:  '';
+  display:  table;
+  clear:  both;
+}
+/* СЕТКА */
+@include make-grid-columns;
+@include make-grid(xs);
+
+/*  ВЕРХНЕЕ МЕНЮ  */
+.menu-top{
+  width: 100%;
+  padding: $margin_def;
+  border-bottom: 2px solid $green;
+  list-style: none;
+  text-align: right;
+  line-height: 0;
+  font-size: 1px;
+
+  &__item{
+    list-style: none;
+    display: inline-block;
+    font-size: $text-size;
+    margin: 0;
+    margin-left:  20px;
+
+    & a{
+      color: $color_def;
+      text-decoration: none;
+    }
+
+    &--active a{
+      color: $green;
+      font-weight:  bold;
+    }
+  }
+}
+/*  ФИЛЬТРЫ  */
+.filter{
+  float: left;
+  width: 200px;
+
+  &__form{
+    margin: 0;
+  }
+
+  &__send{
+    width: 120px;
+    margin: 5px 0 5px;
+  }
+}
+
+.content{
+  float: right;
+  width: 750px;
+
+  &--full{
+    float: none;
+    width: 100%;
+  }
+}
+
+.main-title{
+
+}
+
+/*  ТАБЛИЦА ПОЛЬЗОВАТЕЛЕЙ  */
+.users-table{
+  border-collapse:  collapse;
+  margin-bottom: 15px;
+
+  &__head{
+   & th{
+     padding: 10px;
+   }
+  }
+
+  &__row{
+    & td{
+      padding:  10px;
+    }
+
+    &:nth-child(even){
+      background: $bg-row;
+    }
+  }
+}

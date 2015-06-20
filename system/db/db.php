@@ -38,7 +38,7 @@ class DB{
 	* Вернулось >0 - Количество результатов
 	*/
 	function Query($sql){
-	  $res = mysql_db_query($this->dbName, $sql, $this->dbConn);
+	  $res = mysql_query($this->dbName, $sql, $this->dbConn);
 	  if ( !$res ){
 		  $this->error = mysql_error($this->dbConn);
 		  return -1;
@@ -62,7 +62,7 @@ class DB{
 	* Вернулось >0 - Количество результатов
 	*/
 	function QueryChange($sql){
-	  $res = mysql_db_query($this->dbName, $sql, $this->dbConn);
+	  $res = mysql_query($this->dbName, $sql, $this->dbConn);
 	  if ( !$res ){
 		  $this->error = mysql_error($this->dbConn);
 		  return -1;
