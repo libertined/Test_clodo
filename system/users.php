@@ -1,4 +1,6 @@
 <?php
+global $classesRoot;
+require_once($classesRoot.'/db/db.php');
 /* Users - Класс для работы с пользователями
 */
 $classesRoot = $_SERVER["DOCUMENT_ROOT"].'/system';
@@ -63,11 +65,84 @@ class Users{
         return $tmpUser;
     }
 
+    //Преобразуем полученный поля запроса в условия для SQL
+    public function prepareFilter($fields){
+        $filter = array();
+        foreach($fields as $key => $value){
+            $fields[$key] = trim($value);
+        }
+        if(!empty($fields["fio"]))
+            $filter["NAME"] = "NAME LIKE '%".$fields["fio"]."%'";
+        if(!empty($fields["phone"]))
+            $filter["PHONE"] = "PHONE IS NOT NULL";
+        //Баланс
+        if(isset($fields["balance"]) && $fields["balance"] != ''){
+            if(isset($fields["balance_marg"]) && $fields["balance_marg"] == 'more')
+                $filter["BALANCE"] = "BALANCE > ".str_replace(",", ".", $fields["balance"]);
+            else
+                $filter["BALANCE"] = "BALANCE < ".str_replace(",", ".", $fields["balance"]);
+        }
+        //Дата
+        if(!empty($fields["date_from"]) && !empty($fields["date_to"]))
+            $filter["DATE_REG"] = "DATE_REG BETWEEN STR_TO_DATE('".date('Y-m-d H:i:s', strtotime($fields["date_from"]))."', '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE('".date('Y-m-d H:i:s', strtotime($fields["date_to"]))."', '%Y-%m-%d %H:%i:%s')";
+        elseif(!empty($fields["date_from"]))
+            $filter["DATE_REG"] = "DATE_REG >= STR_TO_DATE('".date('Y-m-d H:i:s', strtotime($fields["date_from"]))."', '%Y-%m-%d %H:%i:%s')";
+        elseif(!empty($fields["date_to"]))
+            $filter["DATE_REG"] = "DATE_REG <= STR_TO_DATE('".date('Y-m-d H:i:s', strtotime($fields["date_to"]))."', '%Y-%m-%d %H:%i:%s')";
+        //Среднее значение платежа
+        if(isset($fields["payment_from"]) && $fields["payment_from"] != '' &&  isset($fields["payment_to"]) && $fields["payment_to"] != '')
+            $filter["PAYMENT"] = "AVG(AMOUNT) BETWEEN ".$fields["payment_from"]." AND ".$fields["payment_to"];
+        elseif(isset($fields["payment_from"]) && $fields["payment_from"] != '')
+            $filter["PAYMENT"] = "AVG(AMOUNT) >= ".$fields["payment_from"];
+        elseif(isset($fields["payment_to"]) && $fields["payment_to"] != '')
+            $filter["PAYMENT"] = "AVG(AMOUNT) ".$fields["payment_to"];
+
+        return $filter;
+    }
+
+    //Получаем список пользователей по фильтру, с учетоб объединения таблиц
+    public function getFilteredlist($fields){
+        $fields = self::prepareFilter($fields);
+
+        if(!isset($fields["PAYMENT"]))
+            return self::getList($fields);
+        else{
+            $having = $fields["PAYMENT"];
+            unset($fields["PAYMENT"]);
+            $whereClose = '';
+            if(!empty($fields)){
+                $whereClose = "WHERE ".implode(" AND ", $fields)." ";
+            }
+            $DB = new DB();
+            $sql = "SELECT * FROM users ".
+                "LEFT JOIN payments ON users.ID = payments.USER_ID ".
+                $whereClose.
+                "GROUP BY payments.USER_ID ".
+                "HAVING ".$having;
+
+            $res = $DB->Query($sql);
+            if($res < 0){
+                echo $DB->getError();
+            }
+            elseif($res == 0)
+            {
+                return array();
+            }
+            else{
+                $countRes = $DB->getCount();
+                $itemsList = array();
+                $resultCont = $DB->getResult();
+
+                for($i=0; $i<$countRes; $i++){
+                    $itemsList[$i] = self::getUser($resultCont[$i]);
+                }
+                return $itemsList;
+            }
+        }
+    }
+
     //Получаем список пользователей
     public function getList($filter = ''){
-        global $classesRoot;
-        require_once($classesRoot.'/db/db.php');
-
         $DB = new DB();
         $whereClose = "";
 
@@ -76,6 +151,7 @@ class Users{
         }
 
         $sql = "SELECT * FROM users ".$whereClose;
+
         $res = $DB->Query($sql);
         if($res < 0){
             echo $DB->getError();

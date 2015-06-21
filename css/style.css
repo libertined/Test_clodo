@@ -62,3 +62,16 @@ html, body { padding: 0; margin: 0; font-family: Tahoma, Arial, sans-serif; colo
 .users-table__head th { padding: 10px; }
 .users-table__row td { padding: 10px; }
 .users-table__row:nth-child(even) { background: #cff5e2; }
+
+/*  МОДАЛЬНОЕ ОКНО  */
+.modal { width: 400px; height: 200px; border-radius: 5px; border: 3px #000 solid; background: #fff; color: #000; position: fixed; top: 45%; left: 50%; margin-top: -100px; margin-left: -200px; display: none; opacity: 0; z-index: 5; padding: 20px 10px; }
+.modal__form { padding-top: 15px; }
+.modal__text span { font-weight: bold; }
+.modal__text-field { width: 250px; margin-bottom: 10px; }
+.modal__msg { display: none; }
+.modal__msg--error { color: #FF0000; }
+.modal__msg--sucsess { color: #35c880; }
+.modal__close { width: 21px; height: 21px; position: absolute; top: 10px; right: 10px; cursor: pointer; display: block; }
+
+/* Подложка */
+.overlay { z-index: 3; position: fixed; background-color: #000; opacity: 0.8; width: 100%; height: 100%; top: 0; left: 0; cursor: pointer; display: none; }

@@ -12,7 +12,9 @@ $arResult["USERS"] = $users->getList();
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <link href="css/normalize.css" rel="stylesheet" type="text/css">
         <link href="css/style.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     </head>
     <body>
         <div class="layoutCenterWrapper">
@@ -35,20 +37,20 @@ $arResult["USERS"] = $users->getList();
                         <div class="filter__item">
                             <p class="filter__item-title">Баланс</p>
                             <label class="filter__item-title filter__item-title--left">
-                                <input class="filter__radio" type="radio" value="less" name="balance_marg"/>
+                                <input class="filter__radio" type="radio" value="more" name="balance_marg" checked/>
                                 <span>&lt;</span>
                             </label>
                             <input class="filter__text-field filter__text-field--small" type="text" placeholder="Введите Баланс" value=""
                                    name="balance"/>
                             <label class="filter__item-title filter__item-title--right">
                                 <span>&gt;</span>
-                                <input class="filter__radio" type="radio" value="more" name="balance_marg"/>
+                                <input class="filter__radio" type="radio" value="less" name="balance_marg"/>
                             </label>
                         </div>
                         <div class="filter__item">
                             <p class="filter__item-title">Зарегистрирован в период</p>
-                            <label class="filter__item-title"><span>С</span> <input class="filter__text-field filter__text-field--double" type="text" placeholder="Дата" value="" name="date_from"/></label>
-                            <label class="filter__item-title filter__item-title--right"><span>По</span> <input class="filter__text-field filter__text-field--double" type="text" placeholder="Дата" value="" name="date_to"/></label>
+                            <label class="filter__item-title"><span>С</span> <input class="filter__text-field filter__text-field--double datepicker" type="text" placeholder="Дата" value="" name="date_from"/></label>
+                            <label class="filter__item-title filter__item-title--right"><span>По</span> <input class="filter__text-field filter__text-field--double datepicker" type="text" placeholder="Дата" value="" name="date_to"/></label>
                         </div>
                         <div class="filter__item">
                             <p class="filter__item-title">Средний платеж (за весь период) </p>
@@ -72,15 +74,15 @@ $arResult["USERS"] = $users->getList();
                         foreach ($arResult["USERS"] as $key => $itemUser) {
                             ?>
                             <tr class="users-table__row" data-user="<?=$itemUser["id"]?>">
-                                <td><?=$itemUser["NAME"]?></td>
-                                <td><?=$itemUser["EMAIL"]?></td>
-                                <td><?if($itemUser["PHONE"] != ""):?>
+                                <td class="users-table__fio"><?=$itemUser["NAME"]?></td>
+                                <td class="users-table__email"><?=$itemUser["EMAIL"]?></td>
+                                <td class="users-table__phone"><?if($itemUser["PHONE"] != ""):?>
                                         <?=$itemUser["PHONE"]?>
                                     <?else:?>
-                                        <button name="send_email">Послать сообщение</button>
+                                        <button class="js-btn-email" name="send_email">Послать сообщение</button>
                                     <?endif;?>
                                 </td>
-                                <td><?=$itemUser["BALANCE"]?></td>
+                                <td class="users-table__balance"><?=$itemUser["BALANCE"]?></td>
                             </tr>
                         <?
                         }
@@ -89,6 +91,17 @@ $arResult["USERS"] = $users->getList();
                 </div>
             </div>
         </div>
+        <div id="js-modal" class="modal"><!-- Само окно -->
+            <span class="modal__close">X</span> <!-- Кнопка закрыть -->
+            <form action="/ajax/sendEmail.php" class="modal__form" method="post">
+                <input type="hidden" name="email" value="0" class="js-email"/>
+                <p class="modal__msg modal__msg--error js-msg"></p>
+                <p class="modal__text">Введите текст сообщения, которое вы хотите отправить Пользователю <span class="js-fio">Имя</span></p>
+                <textarea class="modal__text-field js-comment" name="comment"></textarea>
+                <button type="submit" name="send" value="send">Отправить</button>
+            </form>
+        </div>
+        <div id="overlay" class="overlay"></div><!-- Подложка -->
         <script type="text/javascript" src="/js/script.js"></script>
     </body>
 </html>
